@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>상위에서 하위 컴포넌트로 데이터 전달하기(propsdata로 전달)</title>
+  </head>
+  <body>
+    <!--하위에서 상위 컴포넌트로 데이터 전달하기(원래X): 가능하기는 함(bus 통신 이용) 이벤트 전달하기(O)-->
+    <div id='app'>
+      <!--실행 순서 4: 상위 컴포넌트의 message 속성 값을 하위 컴포넌트의 propsdata로 전달-->
+      <child-component v-bind:propsdata="message"></child-component>
+    </div>
+    <script src="../../js/vue.js"></script>
+    <script>
+      //point! ch34 하위 컴포넌트에서는 못하는 속성 값 전달을 상위 컴포넌트의 v-bind:propsdata를 이용해 하위 컴포넌트에 전달
+      //실행 순서 2: 전역 컴포넌트 등록 (하위 컴포넌트인 child-component를 등록)
+      Vue.component('child-component',{
+        //실행 순서 3: props속성으로 propsdata를 정의
+        props: ['propsdata'], //전역 컴포넌트 사이에 변수명을 전달(연결)하는 역할
+        //실행 순서 5: child-component의 template 속성에 정의된 내용이 전달 됨
+        template: '<p>{{propsdata}}</p>', // , 3번째는 생략하겠다는 의미(props 때문에 사용)
+      });
+      //실행 순서 1: 인스턴스 생성
+      new Vue({
+        el: '#app',
+        data: {
+          message: 'Hello Vue! passed from Parent Component'
+        }
+      });
+    </script>
+  </body>
+</html>
