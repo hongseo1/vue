@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue Router Sample</title>
+</head>
+<body>
+    <div id="app">
+        <!--화면이 보여질 영역-->
+        <router-view></router-view>
+    </div>
+
+	<script src="../js/Vue.js"></script>
+    <script src="../js/Vue-router.js"></script>
+    <script>
+        var User = {
+            template:
+            //그레이브: grave 탭과 개행을 인식하는 특징 , 특정 변수 삽입 용도 (백틱``)
+            //html에서 <pre>태그와 같은 역할
+            //여러줄을 묶을 때 백틱 사용
+            `<div>
+                User component
+                <router-view></router-view>
+            </div>`
+        };
+        //file:///D:/JavaProgramming/vue_source/ch4/index02.html#/user
+        var UserProfile = {template: '<p>User Profile Component</p>'};
+        var UserPost = {template: '<p>User Post Component</p>'};
+        var routes = [
+            {
+                path: '/user', component: User,
+                children: [
+                    {
+                        path: 'posts',
+                        component: UserPost
+                    },
+                    {
+                        path: 'profile',
+                        component: UserProfile
+                    },
+                ]
+            }
+        ];
+        var router  = new VueRouter({
+            routes
+        });
+        var app = new Vue({
+            router
+        }).$mount('#app');
+	</script>
+</body>
+</html>
