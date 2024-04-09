@@ -1,9 +1,10 @@
 <template lang="html">
     <div id="app">
         <WishHeader></WishHeader>
-        <WishInput></WishInput>
-        <WishList></WishList>
-        <WishFooter></WishFooter>
+        <WishInput v-on:addWish="addWish"></WishInput>
+        <!--v-on:addWish에 addWish는 이벤트(하위에서 함수 호출하는 이름), = "addWish"에 addWish는 App.vue에 정의한 함수-->
+        <WishList v-bind:propsData="wishItems" @removeWish="removeWish"></WishList>
+        <WishFooter v-on:removeAll="clearAll"></WishFooter>
     </div>
 </template>
 <script>
@@ -11,7 +12,35 @@
     import WishInput from './components/WishInput.vue'
     import WishList from './components/WishList.vue'
     import WishFooter from './components/WishFooter.vue'
+
     export default{
+        data(){
+            return{
+                wishItems: []
+            }
+        },
+        created(){
+            if(localStorage.length>0){
+                for(var i=0; i<localStorage.length; i++){
+                    this.wishItems.push(localStorage.key(i));
+                }
+            }
+        },
+        methods:{
+            addWish(wishItem){
+                //로컬 스토리지에 데이터를 추가하는 로직
+                localStorage.setItem(wishItem, wishItem);
+                this.wishItems.push(wishItem);
+            },
+            clearAll(){
+                localStorage.clear();
+                this.wishItems= [];
+            },
+            removeWish(wishItem, index){
+                localStorage.removeItem(wishItem);
+                this.wishItems.splice(index, 1); //index 1개 제거(잘라내기)
+            }
+        },
         components: {
             'WishHeader' : WishHeader,
             'WishInput' : WishInput,
