@@ -1,7 +1,7 @@
 <!--WishInput.vue-->
 <template lang="html">
     <div class="inputBox shadow">
-        <input type="text" v-model="newWishItem" v-on:keyup.enter="addWish" placeholder="해야 할 일을 입력하세요."/>
+        <input type="text" v-focus v-model="newWishItem" v-on:keyup.enter="addWish" placeholder="해야 할 일을 입력하세요."/>
         <span class="addContainer" v-on:click="addWish">
             <i class="addBtn fas fa-plus" aria-hidden="true"></i>
         </span>
@@ -11,7 +11,7 @@
             <h3 slot="header">경고</h3>
             <!--모달 내용-->
             <span slot="footer" @click="showModal= false">
-                위시 리스트를 입력하세요.
+                할 일을 입력하세요.
                 <i class="closeModalBtn fas fa-times" aria-hidden="true"></i>
             </span>
         </modal>
@@ -27,13 +27,20 @@
                 showModal: false
             }
         },
+        directives:{
+            focus: {
+                // directive definition
+                inserted: function (el) {
+                    el.focus()
+                }
+            }
+        },
         methods:{
             addWish(){
                 if(this.newWishItem !== ""){
-                    var value = this.newWishItem && this.newWishItem.trim();
-                    this.$emit('addWish', value);
-                    //console.log(this.newWishItem);
-                    //localStorage.setItem(value, value);
+                    const value = this.newWishItem && this.newWishItem.trim();
+                    const key = "vue-whish-" + new Date().getTime();
+                    this.$emit('addWish', key, value, new Date().getTime());
                     this.clearInput(); //input 입력값 초기화
                 } else{
                     this.showModal = !this.showModal;
@@ -51,7 +58,7 @@
 <style lang="css" scoped>
     input:focus{outline:none;}
     .inputBox{background: white; height: 50px; line-height: 50px; border-radius: 5px; margin-bottom: 25px;}
-    .inputBox input{border-style: none; font-size: 1.2em; width: 12.5em; color: #2f3b52;}
+    .inputBox input{border-style: none; font-size: 1.2em; font-weight: bold; width: 12.5em; color: #2f3b52;}
     .addContainer{float: right; background: linear-gradient(to right, #ff4c4d, #b30000); display: inline-block; width: 3em; border-radius: 0 5px 5px 0;}
     .addBtn{color: white; vertical-align: middle;}
 </style>

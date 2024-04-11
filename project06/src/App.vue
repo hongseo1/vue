@@ -3,7 +3,7 @@
         <WishHeader></WishHeader>
         <WishInput v-on:addWish="addWish"></WishInput>
         <!--v-on:addWish에 addWish는 이벤트(하위에서 함수 호출하는 이름), = "addWish"에 addWish는 App.vue에 정의한 함수-->
-        <WishList v-bind:propsData="wishItems" @removeWish="removeWish" @aditWish="editWish"></WishList>
+        <WishList v-bind:propsData="wishItems" @removeWish="removeWish" @editWish="editWish"></WishList>
         <WishFooter v-on:removeAllOfChild="removeAllOfParents"></WishFooter>
     </div>
 </template>
@@ -20,11 +20,11 @@
             }
         },
         created(){
-            if(localStorage.getItem("vue-whish"){
-                this.wishItems = JSON.parse(localStorage.getItem(vue-wish))
+            if(localStorage.getItem("vue-whish")){
+                this.wishItems = JSON.parse(localStorage.getItem(vue-wish));
                 this.wishItems.sort(function(a,b){
                     return a.key < b.key ? -1 : a.key > b.key ? 1 : 0;
-                    //배열 정리 시 사용, if문은 사용할 수 없기때문에 3항 연산자 사용
+                    //배열 정리 시 사용, if문은 사용할 수 없기 때문에 3항 연산자 사용
 
                     /* 예문
                     var arr = [{key:3}], [{key:1}], [{key:2}];
@@ -46,28 +46,40 @@
                     modifiedDate: date
                 })
                 localStorage.setItem("vue-wish", JSON.stringify(this.wishItems))
+
                 /* 예문
-                    let car = {
-                        no : "11가 1111",
-                        name : "소나타",
-                        maker : "현대",
-                        cc : 2000,
-                        year: 2021
-                    };
+                let car = {
+                    no : "11가 1111",
+                    name : "소나타",
+                    maker : "현대",
+                    cc : 2000,
+                    year: 2021
+                };
                 */
                 /* 자바스크립트 객체를  JSON 데이터로 변환
-                    var json = JSON.stringify(car);
-                    console.log(json);
+                var json = JSON.stringify(car);
+                console.log(json);
                 */
                 // 결과 {"no":"11가 1111", "name":"소나타", "maker":"현대", "cc":2000, "year":2021}
             },
-            clearAll(){
-                localStorage.clear();
-                this.wishItems= [];
+            removeAllOfParents(){
+                this.wishItems = []
+                localStorage.setItem("vue-wish", JSON.stringify(this.wishItems))
             },
-            removeWish(wishItem, index){
-                localStorage.removeItem(wishItem);
+            removeWish(keyOfWishItem, index){
                 this.wishItems.splice(index, 1); //index 1개 제거(잘라내기)
+                localStorage.setItem("vue-wish", JSON.stringify(this.wishItems))
+            },
+            editWish(keyOfWishItem, index, editText, modifiedDate){
+                //console.log(keyOfWishItem, index, editText, modifiedDate);
+                const item = this.wishItems[index]
+                this.wishItems.splice(index, 1, {
+                    key: keyOfWishItem,
+                    value: editText,
+                    createdDate: item.createdDate,
+                    modifiedDate: modifiedDate
+                })
+                localStorage.setItem("vue-wish", JSON.stringify(this.wishItems))
             }
         },
         components: {

@@ -5,7 +5,9 @@ module.exports = {
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: './dist/',
+    publicPath: '/dist/',
+    //최종 컴파일 할 때
+    //publicPath: './dist/',
     filename: 'build.js'
   },
   module: {
